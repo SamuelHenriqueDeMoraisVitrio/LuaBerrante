@@ -34,7 +34,7 @@
 ---@field infos TelegramBotInfo
 ---@field getMe fun():BerranteTelegramResponse
 ---@field sendMessage fun(body:table):BerranteTelegramResponse
----@field sendPhoto fun():table
+---@field sendPhoto fun(body:table, is_local:boolean, is_binary:boolean):BerranteTelegramResponse
 ---@field sendAudio fun():table
 ---@field sendDocument fun():table
 ---@field sendVideo fun():table

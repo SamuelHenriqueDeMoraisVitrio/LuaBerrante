@@ -18,9 +18,9 @@ Private.private_BerranteNewSessionTelegramModule = function(self)
     return Private.BerranteSendMessage(self, "sendMessage", body)
   end
 
-  self.sendPhoto = function()
+  self.sendPhoto = function(body, is_local, is_binary)
 
-    return {nil}
+    return Private.BerranteSendPhoto(self, "sendPhoto", body, is_local, is_binary)
   end
 
   self.sendDocument = function()
@@ -59,6 +59,63 @@ end
 
 
 
+
+
+
+Private = Private
+
+local function serialize_form_part(name, value, boundary)
+  return "--" .. boundary .. "\r\n"
+    .. 'Content-Disposition: form-data; name="' .. name .. '"\r\n\r\n'
+    .. tostring(value) .. "\r\n"
+end
+
+local function flatten_json(prefix, tbl, result)
+  for k, v in pairs(tbl) do
+    local full_key = prefix and (prefix .. "[" .. k .. "]") or k
+    if type(v) == "table" then
+      flatten_json(full_key, v, result)
+    else
+      result[full_key] = v
+    end
+  end
+end
+
+Private.private_BerranteFormaterRequisition = function(json, binary)
+  local boundary = "----BERRANTE"
+
+  -- Parte 1: gerar as partes textuais
+  local flattened = {}
+  flatten_json(nil, json, flattened)
+
+  local parts = {}
+
+  for k, v in pairs(flattened) do
+    if k ~= "photo" then
+      table.insert(parts, serialize_form_part(k, v, boundary))
+    end
+  end
+
+  -- Parte 2: adicionar o arquivo binário
+  local filename = json.filename or "file.jpg"
+  local mimetype = json.mimetype or "application/octet-stream"
+
+  local photo_part_header = "--" .. boundary .. "\r\n"
+    .. 'Content-Disposition: form-data; name="photo"; filename="' .. filename .. '"\r\n'
+    .. "Content-Type: " .. mimetype .. "\r\n\r\n"
+
+  local footer = "\r\n--" .. boundary .. "--\r\n"
+
+  -- Parte 3: montar corpo final
+  local body = table.concat(parts) .. photo_part_header .. "binary" .. footer
+
+  local headers = {
+    ["Content-Type"] = "multipart/form-data; boundary=" .. boundary,
+    ["Content-Length"] = tostring(#body),
+  }
+
+  return headers, body
+end
 
 
 
@@ -114,6 +171,61 @@ Private.BerranteSendMessage = function(self, method, json)
   json["chat_id"] = self.infos.id_chat
 
   local response = self.request({url = path, method = "POST", body=json})
+
+  local content_type = response.headers["Content-Type"]
+
+  ----@type BerranteTelegramResponse
+  local objResponse = {}
+
+  objResponse.status_code = response.status_code
+  objResponse.in_error = false
+
+  if content_type ~= "application/json" or objResponse.status_code ~= 200 then
+    objResponse.in_error = true
+  end
+
+  objResponse.body = response.read_body()
+  objResponse.json = response.read_body_json()
+
+  return objResponse
+end
+
+
+
+Private = Private
+
+---@param self BerranteTelegramBot
+---@param method string
+---@param json table
+---@param is_local boolean
+---@param is_binary boolean
+---@return BerranteTelegramResponse
+Private.BerranteSendPhoto = function(self, method, json, is_local, is_binary)
+
+  local path = self.infos.url .. method
+
+  json["chat_id"] = self.infos.id_chat
+
+  local body = nil
+  local headers = nil
+
+  if is_local then
+    if not is_binary then
+      local file = assert(io.open(json["photo"], "rb"))
+      json["photo"] = file:read("*all")
+      file:close()
+    end
+
+    headers, body = Private.private_BerranteFormaterRequisition(json, json["photo"])
+
+  else
+
+    headers = {}
+    body = json
+
+  end
+
+  local response = self.request({url = path, method = "POST", body=body, headers=headers})
 
   local content_type = response.headers["Content-Type"]
 

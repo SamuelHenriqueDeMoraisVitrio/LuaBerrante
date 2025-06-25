@@ -14,9 +14,9 @@ Private.private_BerranteNewSessionTelegramModule = function(self)
     return Private.BerranteSendMessage(self, "sendMessage", body)
   end
 
-  self.sendPhoto = function()
+  self.sendPhoto = function(body, is_local, is_binary)
 
-    return {nil}
+    return Private.BerranteSendPhoto(self, "sendPhoto", body, is_local, is_binary)
   end
 
   self.sendDocument = function()
