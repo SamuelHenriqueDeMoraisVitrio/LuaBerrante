@@ -33,7 +33,7 @@
 ---@field request fun(props: RequestProps):RequestResponse
 ---@field infos TelegramBotInfo
 ---@field getMe fun():BerranteTelegramResponse
----@field sendMessage fun():table
+---@field sendMessage fun(body:table):BerranteTelegramResponse
 ---@field sendPhoto fun():table
 ---@field sendAudio fun():table
 ---@field sendDocument fun():table

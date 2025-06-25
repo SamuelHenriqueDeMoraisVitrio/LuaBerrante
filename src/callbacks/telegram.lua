@@ -9,9 +9,9 @@ Private.private_BerranteNewSessionTelegramModule = function(self)
     return Private.BerranteGetInfoBot(self, "getMe")
   end
 
-  self.sendMessage = function()
+  self.sendMessage = function(body)
 
-    return {nil}
+    return Private.BerranteSendMessage(self, "sendMessage", body)
   end
 
   self.sendPhoto = function()
