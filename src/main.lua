@@ -3,10 +3,10 @@ Private = Private
 
 ---@param flags LuaBerranteTelegramFlags
 ---@param request_provider fun(props: RequestProps):RequestResponse
----@return BerranteTelegramBot
+---@return BerranteTelegramBot | nil
 Berrante.newTelegramSession = function(flags, request_provider)
 
-  ---@type BerranteTelegramBot
+  ----@type BerranteTelegramBot
   local self = {}
   self.infos = {}
 
@@ -20,11 +20,16 @@ Berrante.newTelegramSession = function(flags, request_provider)
   end
 
   self.infos.id_chat = flags.id_chat
+  self.infos.token = flags.token
   self.infos.url = flags.url .. "/bot" .. flags.token .. '/'
 
   self.request = request_provider
 
   Private.private_BerranteNewSessionTelegramModule(self)
+
+  if self.getMe().in_error then
+    return nil
+  end
 
   return self
 end
