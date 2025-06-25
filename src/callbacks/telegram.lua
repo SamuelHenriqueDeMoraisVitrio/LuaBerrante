@@ -1,0 +1,57 @@
+
+Private = Private
+
+---@param self BerranteTelegramBot
+---@return BerranteTelegramBot
+Private.private_BerranteNewSessionTelegramModule = function(self)
+
+  self.getMe = function()
+    return Private.BerranteGetInfoBot(self, "getMe")
+  end
+
+  self.sendMessage = function()
+
+    return {nil}
+  end
+
+  self.sendPhoto = function()
+
+    return {nil}
+  end
+
+  self.sendDocument = function()
+
+    return {nil}
+  end
+
+  self.sendVideo = function()
+
+    return {nil}
+  end
+
+  self.sendAudio = function()
+
+    return {nil}
+  end
+
+  self.sendContact = function()
+
+    return {nil}
+  end
+
+  self.sendLocation = function()
+
+    return {nil}
+  end
+
+  self.sendVoice = function()
+
+    return {nil}
+  end
+
+  return self
+
+end
+
+
+
