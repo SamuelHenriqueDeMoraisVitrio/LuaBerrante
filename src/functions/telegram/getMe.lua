@@ -11,6 +11,7 @@ Private.BerranteGetInfoBot = function(self, method)
 
   print(response.status())
   print(response.read_body())
+  print(response.read_body_json())
 
   return {nil}
 end

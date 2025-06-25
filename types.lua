@@ -5,6 +5,7 @@
 ---@field status number
 ---@field headers table<string, string>
 ---@field read_body fun(): string
+---@field read_body_json fun(): table
 
 ---@class RequestProps
 ---@field url string
