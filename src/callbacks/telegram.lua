@@ -13,8 +13,8 @@ Private.private_BerranteNewSessionTelegramModule = function(self)
     return Private.BerranteSendMessage(self, "sendMessage", body)
   end
 
-  self.sendPhoto = function(body, flags)
-    return Private.BerranteSendPhoto(self, "sendPhoto", body, flags)
+  self.sendPhoto = function(body)
+    return Private.BerranteSendPhoto(self, "sendPhoto", body)
   end
 
   self.sendDocument = function()

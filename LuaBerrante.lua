@@ -14,13 +14,11 @@ Private.private_BerranteNewSessionTelegramModule = function(self)
   end
 
   self.sendMessage = function(body)
-
     return Private.BerranteSendMessage(self, "sendMessage", body)
   end
 
-  self.sendPhoto = function(body, args)
-
-    return Private.BerranteSendPhoto(self, "sendPhoto", body, args)
+  self.sendPhoto = function(body)
+    return Private.BerranteSendPhoto(self, "sendPhoto", body)
   end
 
   self.sendDocument = function()
@@ -81,7 +79,7 @@ local function flatten_json(prefix, tbl, result)
   end
 end
 
-Private.private_BerranteFormaterRequisition = function(json, binary, content, namefile)
+Private.private_BerranteFormaterRequisition = function(json, files, headers)
   local boundary = "----BERRANTE"
 
   -- Parte 1: gerar as partes textuais
@@ -90,29 +88,54 @@ Private.private_BerranteFormaterRequisition = function(json, binary, content, na
 
   local parts = {}
 
+  local binary_fields = {}
+  for _, name in ipairs(files or {}) do
+    binary_fields[name] = true
+  end
+
+  -- agora o loop fica limpo e eficiente
   for k, v in pairs(flattened) do
-    if k ~= "photo" then
+    if not binary_fields[k] then
       table.insert(parts, serialize_form_part(k, v, boundary))
     end
   end
 
-  -- Parte 2: adicionar o arquivo binário
-  local filename = namefile
+  -- adicionar arquivos binários
+  for _, field_name in ipairs(files or {}) do
+    local file = json[field_name]
+    --assert(file and file.content and file.content_type and file.filename, "Dados incompletos para arquivo: " .. tostring(field_name))
 
-  local photo_part_header = "--" .. boundary .. "\r\n"
-    .. 'Content-Disposition: form-data; name="photo"; filename="' .. filename .. '"\r\n'
-    .. "Content-Type: " .. content .. "\r\n\r\n"
+    local part = "--" .. boundary .. "\r\n"
+      .. 'Content-Disposition: form-data; name="' .. field_name .. '"; filename="' .. file.filename .. '"\r\n'
+      .. "Content-Type: " .. file.content_type .. "\r\n\r\n"
+      .. file.content .. "\r\n"
 
-  local footer = "\r\n--" .. boundary .. "--\r\n"
+    table.insert(parts, part)
+  end
 
-  -- Parte 3: montar corpo final
-  local body = table.concat(parts) .. photo_part_header .. binary .. footer
+  -- footer sem \r\n extra no começo
+  local footer = "--" .. boundary .. "--\r\n"
 
-  local headers = {
-    ["Content-Type"] = "multipart/form-data; boundary=" .. boundary
-  }
+  -- corpo final
+  local body = table.concat(parts) .. footer
 
-  return headers, body
+  headers["Content-Type"] = "multipart/form-data; boundary=" .. boundary
+
+  return body
+end
+
+
+
+Private = Private
+
+Private.private_BerranteStringIsBinary = function(path)
+  local arquivo = io.open(path, "r")
+  if arquivo then
+    arquivo:close()
+    return false
+  end
+
+  return true
 end
 
 
@@ -195,34 +218,42 @@ Private = Private
 ---@param self BerranteTelegramBot
 ---@param method string
 ---@param json table
----@param args TelegramBotSendPhotoFlags
 ---@return BerranteTelegramResponse
-Private.BerranteSendPhoto = function(self, method, json, args)
+Private.BerranteSendPhoto = function(self, method, json)
 
   local path = self.infos.url .. method
 
   json["chat_id"] = self.infos.id_chat
 
+  local keys = {"photo"}
   local body = nil
-  local headers = nil
+  local headers = {}
+  local files = {}
+  local have_local = false
 
-  if args.is_local then
+  for _, key in ipairs(keys) do
+    local value = json[key]
+    if value ~= nil and type(value) ~= "string" then
+      table.insert(files, key)
+      local file_table = json[key]
+      file_table.content_type = file_table.content_type or ""
+      file_table.filename = file_table.filename or ""
 
-    args.content_type = args.content_type or "application/octet-stream"
-    args.file_name = args.file_name or "file_image"
+      if not Private.private_BerranteStringIsBinary(file_table.content) then
+        print("chegou aq!!!")
+        local file = assert(io.open(file_table.content, "rb"))
+        file_table.content = file:read("*all")
+        file:close()
+      end
 
-    if not args.is_binary then
-      local file = assert(io.open(json["photo"], "rb"))
-      json["photo"] = file:read("*all")
-      file:close()
+      have_local = true
     end
-
-
-    headers, body = Private.private_BerranteFormaterRequisition(json, json["photo"], args.content_type, args.file_name)
-
   end
 
-  headers = headers or {}
+  if have_local then
+    body = Private.private_BerranteFormaterRequisition(json, files, headers)
+  end
+
   body = body or json
 
   local response = self.request({url = path, method = "POST", body=body, headers=headers})

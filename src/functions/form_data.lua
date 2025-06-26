@@ -18,7 +18,7 @@ local function flatten_json(prefix, tbl, result)
   end
 end
 
-Private.private_BerranteFormaterRequisition = function(json, binary, content, namefile)
+Private.private_BerranteFormaterRequisition = function(json, files, headers)
   local boundary = "----BERRANTE"
 
   -- Parte 1: gerar as partes textuais
@@ -27,27 +27,38 @@ Private.private_BerranteFormaterRequisition = function(json, binary, content, na
 
   local parts = {}
 
+  local binary_fields = {}
+  for _, name in ipairs(files or {}) do
+    binary_fields[name] = true
+  end
+
+  -- agora o loop fica limpo e eficiente
   for k, v in pairs(flattened) do
-    if k ~= "photo" then
+    if not binary_fields[k] then
       table.insert(parts, serialize_form_part(k, v, boundary))
     end
   end
 
-  -- Parte 2: adicionar o arquivo binário
-  local filename = namefile
+  -- adicionar arquivos binários
+  for _, field_name in ipairs(files or {}) do
+    local file = json[field_name]
+    --assert(file and file.content and file.content_type and file.filename, "Dados incompletos para arquivo: " .. tostring(field_name))
 
-  local photo_part_header = "--" .. boundary .. "\r\n"
-    .. 'Content-Disposition: form-data; name="photo"; filename="' .. filename .. '"\r\n'
-    .. "Content-Type: " .. content .. "\r\n\r\n"
+    local part = "--" .. boundary .. "\r\n"
+      .. 'Content-Disposition: form-data; name="' .. field_name .. '"; filename="' .. file.filename .. '"\r\n'
+      .. "Content-Type: " .. file.content_type .. "\r\n\r\n"
+      .. file.content .. "\r\n"
 
-  local footer = "\r\n--" .. boundary .. "--\r\n"
+    table.insert(parts, part)
+  end
 
-  -- Parte 3: montar corpo final
-  local body = table.concat(parts) .. photo_part_header .. binary .. footer
+  -- footer sem \r\n extra no começo
+  local footer = "--" .. boundary .. "--\r\n"
 
-  local headers = {
-    ["Content-Type"] = "multipart/form-data; boundary=" .. boundary
-  }
+  -- corpo final
+  local body = table.concat(parts) .. footer
 
-  return headers, body
+  headers["Content-Type"] = "multipart/form-data; boundary=" .. boundary
+
+  return body
 end
