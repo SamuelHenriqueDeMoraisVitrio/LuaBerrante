@@ -14,7 +14,7 @@ Private.private_BerranteNewSessionTelegramModule = function(self)
   end
 
   self.sendPhoto = function(body)
-    return Private.BerranteSendPhoto(self, "sendPhoto", body)
+    return Private.private_TelegramSendMessageWithFormData(self, "sendPhoto", body, {"photo"})
   end
 
   self.sendDocument = function()
@@ -28,7 +28,7 @@ Private.private_BerranteNewSessionTelegramModule = function(self)
   end
 
   self.sendAudio = function(body)
-    return Private.BerranteSendAudio(self, "sendAudio", body)
+    return Private.private_TelegramSendMessageWithFormData(self, "sendAudio", body, {"audio", "thumbnail"})
   end
 
   self.sendContact = function()
