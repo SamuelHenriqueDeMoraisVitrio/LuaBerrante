@@ -8,6 +8,8 @@ Private.BerranteSendMessage = function(self, method, json, id)
 
   local path = self.infos.url .. method
 
+  json = json or {}
+
   json["chat_id"] = id or self.infos.id_chat
 
   local response = self.request({url = path, method = "POST", body=json})

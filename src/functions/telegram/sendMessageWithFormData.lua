@@ -8,6 +8,8 @@ Private.private_TelegramSendMessageWithFormData = function(self, method, json, k
 
   local path = self.infos.url .. method
 
+  json = json or {}
+
   json["chat_id"] = id or self.infos.id_chat
 
   local body = nil

@@ -42,6 +42,33 @@
 ---@field sendVoice fun(body:table, destination:(string[])[]):BerranteTelegramResponse
 ---@field sendLocation fun(body:table, destination:(string[])[]):BerranteTelegramResponse
 ---@field sendContact fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field forwardMessage fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field forwardMessages fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field copyMessage fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field copyMessages fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field sendAnimation fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field sendVideoNote fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field sendPaidMedia fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field sendMediaGroup fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field sendVenue fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field sendPoll fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field sendDice fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field sendSticker fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field editMessageText fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field editMessageCaption fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field editMessageMedia fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field editMessageReplyMarkup fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field deleteMessage fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field answerCallbackQuery fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field answerInlineQuery fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field getFile fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field getUserProfilePhotos fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field getChat fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field getChatAdministrators fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field getChatMember fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field getChatMemberCount fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field leaveChat fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field getUpdates fun(body:table, destination:(string[])[]):BerranteTelegramResponse
 
 ---@class LuaBerranteTelegramFlags
 ---@field token string
