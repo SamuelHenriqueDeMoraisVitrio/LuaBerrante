@@ -4,11 +4,11 @@ Private = Private
 ---@param method string
 ---@param json table
 ---@return BerranteTelegramResponse
-Private.private_TelegramSendMessageWithFormData = function(self, method, json, keys)
+Private.private_TelegramSendMessageWithFormData = function(self, method, json, keys, id)
 
   local path = self.infos.url .. method
 
-  json["chat_id"] = self.infos.id_chat
+  json["chat_id"] = id or self.infos.id_chat
 
   local body = nil
   local headers = {}
@@ -49,6 +49,7 @@ Private.private_TelegramSendMessageWithFormData = function(self, method, json, k
   objResponse.status_code = response.status_code
   objResponse.in_error = false
   objResponse.body = response.read_body()
+  objResponse.chat_id = json["chat_id"]
 
   if content_type_response ~= "application/json" or objResponse.status_code ~= 200 then
     objResponse.in_error = true

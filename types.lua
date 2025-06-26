@@ -28,19 +28,20 @@
 ---@field body string | nil
 ---@field json table
 ---@field in_error boolean
+---@field chat_id string
 
 ---@class BerranteTelegramBot
 ---@field request fun(props: RequestProps):RequestResponse
 ---@field infos TelegramBotInfo
 ---@field getMe fun():BerranteTelegramResponse
----@field sendMessage fun(body:table):BerranteTelegramResponse
----@field sendPhoto fun(body:table):BerranteTelegramResponse
----@field sendAudio fun(body:table):BerranteTelegramResponse
----@field sendDocument fun(body:table):BerranteTelegramResponse
----@field sendVideo fun(body:table):BerranteTelegramResponse
----@field sendVoice fun(body:table):BerranteTelegramResponse
----@field sendLocation fun(body:table):BerranteTelegramResponse
----@field sendContact fun(body:table):BerranteTelegramResponse
+---@field sendMessage fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field sendPhoto fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field sendAudio fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field sendDocument fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field sendVideo fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field sendVoice fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field sendLocation fun(body:table, destination:(string[])[]):BerranteTelegramResponse
+---@field sendContact fun(body:table, destination:(string[])[]):BerranteTelegramResponse
 
 ---@class LuaBerranteTelegramFlags
 ---@field token string
