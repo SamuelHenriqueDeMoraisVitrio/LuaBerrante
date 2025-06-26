@@ -18,7 +18,7 @@ local function flatten_json(prefix, tbl, result)
   end
 end
 
-Private.private_BerranteFormaterRequisition = function(json, binary)
+Private.private_BerranteFormaterRequisition = function(json, binary, content, namefile)
   local boundary = "----BERRANTE"
 
   -- Parte 1: gerar as partes textuais
@@ -34,21 +34,19 @@ Private.private_BerranteFormaterRequisition = function(json, binary)
   end
 
   -- Parte 2: adicionar o arquivo binário
-  local filename = json.filename or "file.jpg"
-  local mimetype = json.mimetype or "application/octet-stream"
+  local filename = namefile
 
   local photo_part_header = "--" .. boundary .. "\r\n"
     .. 'Content-Disposition: form-data; name="photo"; filename="' .. filename .. '"\r\n'
-    .. "Content-Type: " .. mimetype .. "\r\n\r\n"
+    .. "Content-Type: " .. content .. "\r\n\r\n"
 
   local footer = "\r\n--" .. boundary .. "--\r\n"
 
   -- Parte 3: montar corpo final
-  local body = table.concat(parts) .. photo_part_header .. "binary" .. footer
+  local body = table.concat(parts) .. photo_part_header .. binary .. footer
 
   local headers = {
-    ["Content-Type"] = "multipart/form-data; boundary=" .. boundary,
-    ["Content-Length"] = tostring(#body),
+    ["Content-Type"] = "multipart/form-data; boundary=" .. boundary
   }
 
   return headers, body

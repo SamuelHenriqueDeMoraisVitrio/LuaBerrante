@@ -4,10 +4,9 @@ Private = Private
 ---@param self BerranteTelegramBot
 ---@param method string
 ---@param json table
----@param is_local boolean
----@param is_binary boolean
+---@param args TelegramBotSendPhotoFlags | nil
 ---@return BerranteTelegramResponse
-Private.BerranteSendPhoto = function(self, method, json, is_local, is_binary)
+Private.BerranteSendPhoto = function(self, method, json, args)
 
   local path = self.infos.url .. method
 
@@ -16,37 +15,41 @@ Private.BerranteSendPhoto = function(self, method, json, is_local, is_binary)
   local body = nil
   local headers = nil
 
-  if is_local then
-    if not is_binary then
+  if args.is_local then
+
+    args.content_type = args.content_type or "application/octet-stream"
+    args.file_name = args.file_name or "file_image"
+
+    if not args.is_binary then
       local file = assert(io.open(json["photo"], "rb"))
       json["photo"] = file:read("*all")
       file:close()
     end
 
-    headers, body = Private.private_BerranteFormaterRequisition(json, json["photo"])
 
-  else
-
-    headers = {}
-    body = json
+    headers, body = Private.private_BerranteFormaterRequisition(json, json["photo"], args.content_type, args.file_name)
 
   end
 
+  headers = headers or {}
+  body = body or json
+
   local response = self.request({url = path, method = "POST", body=body, headers=headers})
 
-  local content_type = response.headers["Content-Type"]
+  local content_type_response = response.headers["Content-Type"]
 
   ----@type BerranteTelegramResponse
   local objResponse = {}
 
   objResponse.status_code = response.status_code
   objResponse.in_error = false
+  objResponse.body = response.read_body()
 
-  if content_type ~= "application/json" or objResponse.status_code ~= 200 then
+  if content_type_response ~= "application/json" or objResponse.status_code ~= 200 then
     objResponse.in_error = true
+    return objResponse
   end
 
-  objResponse.body = response.read_body()
   objResponse.json = response.read_body_json()
 
   return objResponse

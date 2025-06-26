@@ -29,12 +29,19 @@
 ---@field json table
 ---@field in_error boolean
 
+---@class TelegramBotSendPhotoFlags
+---@field body table
+---@field is_local boolean | nil
+---@field is_binary boolean | nil
+---@field content_type string | nil
+---@field file_name string | nil
+
 ---@class BerranteTelegramBot
 ---@field request fun(props: RequestProps):RequestResponse
 ---@field infos TelegramBotInfo
 ---@field getMe fun():BerranteTelegramResponse
 ---@field sendMessage fun(body:table):BerranteTelegramResponse
----@field sendPhoto fun(body:table, is_local:boolean, is_binary:boolean):BerranteTelegramResponse
+---@field sendPhoto fun(body:table, args?:TelegramBotSendPhotoFlags):BerranteTelegramResponse
 ---@field sendAudio fun():table
 ---@field sendDocument fun():table
 ---@field sendVideo fun():table
