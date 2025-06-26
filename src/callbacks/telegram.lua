@@ -27,9 +27,8 @@ Private.private_BerranteNewSessionTelegramModule = function(self)
     return {nil}
   end
 
-  self.sendAudio = function()
-
-    return {nil}
+  self.sendAudio = function(body)
+    return Private.BerranteSendAudio(self, "sendAudio", body)
   end
 
   self.sendContact = function()

@@ -1,17 +1,18 @@
 
+
 Private = Private
 
 ---@param self BerranteTelegramBot
 ---@param method string
 ---@param json table
 ---@return BerranteTelegramResponse
-Private.BerranteSendPhoto = function(self, method, json)
+Private.BerranteSendAudio = function(self, method, json)
 
   local path = self.infos.url .. method
 
   json["chat_id"] = self.infos.id_chat
 
-  local keys = {"photo"}
+  local keys = {"audio", "thumbnail"}
   local body = nil
   local headers = {}
   local files = {}
