@@ -17,33 +17,33 @@ Private.private_BerranteNewSessionTelegramModule = function(self)
     return Private.private_TelegramSendMessageWithFormData(self, "sendPhoto", body, {"photo"})
   end
 
-  self.sendDocument = function()
+  self.sendDocument = function(body)
 
-    return {nil}
+    return Private.private_TelegramSendMessageWithFormData(self, "sendDocument", body, {"document", "thumbnail"})
   end
 
-  self.sendVideo = function()
+  self.sendVideo = function(body)
 
-    return {nil}
+    return Private.private_TelegramSendMessageWithFormData(self, "sendVideo", body, {"video", "thumbnail", "cover"})
   end
 
   self.sendAudio = function(body)
     return Private.private_TelegramSendMessageWithFormData(self, "sendAudio", body, {"audio", "thumbnail"})
   end
 
-  self.sendContact = function()
+  self.sendContact = function(body)
 
-    return {nil}
+    return Private.BerranteSendMessage(self, "sendContact", body)
   end
 
-  self.sendLocation = function()
+  self.sendLocation = function(body)
 
-    return {nil}
+    return Private.BerranteSendMessage(self, "sendLocation", body)
   end
 
-  self.sendVoice = function()
+  self.sendVoice = function(body)
 
-    return {nil}
+    return Private.private_TelegramSendMessageWithFormData(self, "sendVoice", body, {"voice"})
   end
 
   return self

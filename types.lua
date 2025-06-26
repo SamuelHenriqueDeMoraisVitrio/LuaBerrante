@@ -36,11 +36,11 @@
 ---@field sendMessage fun(body:table):BerranteTelegramResponse
 ---@field sendPhoto fun(body:table):BerranteTelegramResponse
 ---@field sendAudio fun(body:table):BerranteTelegramResponse
----@field sendDocument fun():table
----@field sendVideo fun():table
----@field sendVoice fun():table
----@field sendLocation fun():table
----@field sendContact fun():table
+---@field sendDocument fun(body:table):BerranteTelegramResponse
+---@field sendVideo fun(body:table):BerranteTelegramResponse
+---@field sendVoice fun(body:table):BerranteTelegramResponse
+---@field sendLocation fun(body:table):BerranteTelegramResponse
+---@field sendContact fun(body:table):BerranteTelegramResponse
 
 ---@class LuaBerranteTelegramFlags
 ---@field token string

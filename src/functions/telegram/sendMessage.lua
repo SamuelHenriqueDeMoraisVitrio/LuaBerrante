@@ -19,12 +19,12 @@ Private.BerranteSendMessage = function(self, method, json)
 
   objResponse.status_code = response.status_code
   objResponse.in_error = false
+  objResponse.body = response.read_body()
 
   if content_type ~= "application/json" or objResponse.status_code ~= 200 then
     objResponse.in_error = true
   end
 
-  objResponse.body = response.read_body()
   objResponse.json = response.read_body_json()
 
   return objResponse
