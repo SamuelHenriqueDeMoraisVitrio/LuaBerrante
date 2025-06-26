@@ -41,7 +41,7 @@
 ---@field infos TelegramBotInfo
 ---@field getMe fun():BerranteTelegramResponse
 ---@field sendMessage fun(body:table):BerranteTelegramResponse
----@field sendPhoto fun(body:table, args?:TelegramBotSendPhotoFlags):BerranteTelegramResponse
+---@field sendPhoto fun(body:table, flags?:TelegramBotSendPhotoFlags):BerranteTelegramResponse
 ---@field sendAudio fun():table
 ---@field sendDocument fun():table
 ---@field sendVideo fun():table

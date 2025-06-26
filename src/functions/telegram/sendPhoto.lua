@@ -15,7 +15,7 @@ Private.BerranteSendPhoto = function(self, method, json, args)
   local body = nil
   local headers = nil
 
-  if args.is_local then
+  if args and (args.is_local or args.is_binary) then --Precisa verificar args para o auto complete não me enxer.
 
     args.content_type = args.content_type or "application/octet-stream"
     args.file_name = args.file_name or "file_image"
@@ -26,9 +26,7 @@ Private.BerranteSendPhoto = function(self, method, json, args)
       file:close()
     end
 
-
     headers, body = Private.private_BerranteFormaterRequisition(json, json["photo"], args.content_type, args.file_name)
-
   end
 
   headers = headers or {}
