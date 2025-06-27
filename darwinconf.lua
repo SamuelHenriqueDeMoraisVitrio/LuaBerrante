@@ -17,6 +17,3 @@ end)()]]
 
 local result = table.concat(all, "\n")
 darwin.dtw.write_file("Berrante/LuaBerrante.lua", result)
-
-darwin.dtw.remove_any("Berrante.zip")
-os.execute("zip -r Berrante.zip Berrante")
