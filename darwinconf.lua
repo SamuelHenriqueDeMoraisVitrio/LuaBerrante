@@ -16,4 +16,4 @@ end)()]]
 
 
 local result = table.concat(all, "\n")
-darwin.dtw.write_file("Berrante/LuaBerrante.lua", result)
+darwin.dtw.write_file("LuaBerrante/LuaBerrante.lua", result)

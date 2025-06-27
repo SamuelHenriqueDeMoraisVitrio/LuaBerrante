@@ -1,5 +1,5 @@
 local LuaBear = require("luaBear.luaBear")
-local Berrante = require("Berrante.LuaBerrante")
+local Berrante = require("LuaBerrante.LuaBerrante")
 
 
 local session = Berrante.newTelegramSession({id_chat="-123456789", token="token"}, LuaBear.fetch)

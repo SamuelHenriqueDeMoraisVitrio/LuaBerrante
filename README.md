@@ -9,7 +9,7 @@
 You can include `Berrante` as part of your Lua project. It depends on external request modules that you must inject manually, providing full control over HTTP behavior.
 
 ```bash
-curl -L -s https://github.com/SamuelHenriqueDeMoraisVitrio/LuaBerrante/releases/download/V0.0.1/LuaBerrante.lua -o LuaBerrante.lua
+mkdir LuaBerrante && curl -L -s https://github.com/SamuelHenriqueDeMoraisVitrio/LuaBerrante/releases/download/V0.0.1/LuaBerrante.lua -o LuaBerrante/LuaBerrante.lua
 ```
 
 It is recommended to use the **Lua-bear** lib as the entire lib was created based on it.
